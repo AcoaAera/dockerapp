@@ -21,7 +21,7 @@ docker run -p 8080:80 sergejoz/dockerapi
 docker-compose up
 ```
 
-Запускает три приложения на портах 8181, 8282, 8383 и балансировщик NGINX на :81. За это отвечает (docker-compise.yml)[https://github.com/sergejoz/dockerapp/blob/master/docker-compose.yml].
+Запускает три приложения на портах 8181, 8282, 8383 и балансировщик NGINX на :81. За это отвечает [docker-compise.yml](https://github.com/sergejoz/dockerapp/blob/master/docker-compose.yml).
 
 ## Пояснение по Dockerfile
 
