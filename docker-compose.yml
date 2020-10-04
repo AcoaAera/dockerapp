@@ -1,0 +1,21 @@
+version: "3.0"
+services:
+ web1:
+    image: sergejoz/dockerapi
+    ports:
+    - "8181:80"
+ web2:
+    image: sergejoz/dockerapi
+    ports:
+    - "8282:80"
+ web3:
+   image: sergejoz/dockerapi
+   ports:
+   - "8383:80"
+ nginx:
+    image: nginx
+    ports: 
+    - "81:80"
+    network_mode: "host" 
+    volumes: 
+     - /home/sergej/dockerapi/nginx.conf:/etc/nginx/nginx.conf
