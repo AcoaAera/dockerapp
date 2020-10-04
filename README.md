@@ -50,3 +50,76 @@ COPY --from=build-env /app/out .
 ENTRYPOINT ["dotnet", "dockerapi.dll"]
 ```
 ## Запуск утилиты ab
+
+```sh
+ab -c 100 -n 10000 http://localhost:81/
+```
+Результат:
+```s
+Concurrency Level:      100
+Time taken for tests:   1.833 seconds
+Complete requests:      10000
+Failed requests:        8003
+   (Connect: 0, Receive: 0, Length: 8003, Exceptions: 0)
+Total transferred:      1478003 bytes
+HTML transferred:       38003 bytes
+Requests per second:    5456.84 [#/sec] (mean)
+Time per request:       18.326 [ms] (mean)
+Time per request:       0.183 [ms] (mean, across all concurrent requests)
+Transfer rate:          787.62 [Kbytes/sec] received
+
+Connection Times (ms)
+              min  mean[+/-sd] median   max
+Connect:        0    0   0.3      0      12
+Processing:     0   18  14.6     15     123
+Waiting:        0   18  14.6     14     123
+Total:          1   18  14.7     15     124
+
+Percentage of the requests served within a certain time (ms)
+  50%     15
+  66%     19
+  75%     23
+  80%     25
+  90%     34
+  95%     45
+  98%     59
+  99%     86
+ 100%    124 (longest request)
+```
+
+Запустим с большим количеством:
+```sh
+ab -c 100 -n 100000 http://localhost:81/
+```
+Результат:
+```s
+oncurrency Level:      100
+Time taken for tests:   126.565 seconds
+Complete requests:      100000
+Failed requests:        81001
+   (Connect: 0, Receive: 0, Length: 81001, Exceptions: 0)
+Total transferred:      14881001 bytes
+HTML transferred:       481001 bytes
+Requests per second:    790.11 [#/sec] (mean)
+Time per request:       126.565 [ms] (mean)
+Time per request:       1.266 [ms] (mean, across all concurrent requests)
+Transfer rate:          114.82 [Kbytes/sec] received
+
+Connection Times (ms)
+              min  mean[+/-sd] median   max
+Connect:        0   29 646.5      0   64118
+Processing:     0   95 733.2      7   60044
+Waiting:        0   95 733.2      7   60044
+Total:          0  124 975.4      7   64121
+
+Percentage of the requests served within a certain time (ms)
+  50%      7
+  66%     11
+  75%     13
+  80%     15
+  90%     26
+  95%   1024
+  98%   1037
+  99%   3023
+ 100%  64121 (longest request)
+```
