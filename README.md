@@ -8,12 +8,20 @@ dotnet new  webapi -n DockerAPI
 
 К нему добавлен контроллер со счетчиком.
 
-# Запуск
+# Запуск одного контейнера
 
 ```sh
 docker build -t sergejoz/dockerapi .
 docker run -p 8080:80 sergejoz/dockerapi
 ```
+
+# Автоматизированный запуск нескольких контейнеров
+
+```sh
+docker-compose up
+```
+
+Запускает три приложения на портах 8181, 8282, 8383 и балансировщик [NGINX] на :81.
 
 # Пояснение по Dockerfile
 
