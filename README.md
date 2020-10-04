@@ -23,7 +23,7 @@ docker-compose up
 
 Запускает три приложения на портах 8181, 8282, 8383 и балансировщик NGINX на :81. За это отвечает [docker-compise.yml](https://github.com/sergejoz/dockerapp/blob/master/docker-compose.yml).
 
-## Пояснение по Dockerfile
+## Пояснение по [Dockerfile](https://github.com/sergejoz/dockerapp/blob/master/Dockerfile)
 
 Получаем .NET SDK от Microsoft:
 ```sh
@@ -49,3 +49,4 @@ EXPOSE 80
 COPY --from=build-env /app/out .
 ENTRYPOINT ["dotnet", "dockerapi.dll"]
 ```
+## Запуск утилиты ab
