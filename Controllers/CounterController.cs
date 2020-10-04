@@ -7,17 +7,22 @@ using Microsoft.Extensions.Logging;
 
 namespace dockerapi.Controllers
 {
-
     [ApiController]
     [Route("/")]
     public class CounterController : ControllerBase
     {
-        public static int count;
+        public static int count = 0;
 
         [HttpGet]
         public ActionResult<int> Get()
         {
-            count = count + 1;
+            count++;
+            return count;
+        }
+
+        [HttpGet("{count}")]
+        public ActionResult<int> GetCount()
+        {
             return count;
         }
     }
