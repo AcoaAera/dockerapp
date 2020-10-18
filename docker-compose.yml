@@ -12,6 +12,10 @@ services:
    image: sergejoz/dockerapi
    ports:
    - "8383:80"
+ redis:
+   image: redis
+   ports:
+   - "6379:6379"
  nginx:
     image: nginx
     ports: 
