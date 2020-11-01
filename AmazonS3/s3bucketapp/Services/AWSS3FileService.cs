@@ -13,10 +13,14 @@ namespace s3bucketapp.Services
     {
         Task<bool> UploadFile(UploadFileName uploadFileName);
         Task<List<string>> FilesList();
+        Task<List<string>> BucketList();
         Task<Stream> GetFile(string key);
         Task<bool> UpdateFile(UploadFileName uploadFileName, string key);
         Task<bool> DeleteFile(string key);
+        Task<bool> DeleteBucket(string key);
+        Task<bool> AddBucket(string key);
     }
+
     public class AWSS3FileService : IAWSS3FileService
     {
         private readonly IAWSS3BucketHelper _AWSS3BucketHelper;
@@ -56,6 +60,21 @@ namespace s3bucketapp.Services
                 throw ex;
             }
         }
+
+        public async Task<List<string>> BucketList()
+        {
+            try
+            {
+                ListBucketsResponse listBuckets = await _AWSS3BucketHelper.BucketList();
+                return listBuckets.Buckets.Select(c=>c.BucketName).ToList();
+            }
+            catch (Exception ex)
+            {
+
+                throw ex;
+            }
+        }
+
         public async Task<Stream> GetFile(string key)
         {
             try
@@ -96,6 +115,30 @@ namespace s3bucketapp.Services
             try
             {
                 return await _AWSS3BucketHelper.DeleteFile(key);
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
+        }
+
+        public async Task<bool> DeleteBucket(string key)
+        {
+            try
+            {
+                return await _AWSS3BucketHelper.DeleteBucket(key);
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
+        }
+
+        public async Task<bool> AddBucket(string key)
+        {
+            try
+            {
+                return await _AWSS3BucketHelper.AddBucket(key);
             }
             catch (Exception ex)
             {

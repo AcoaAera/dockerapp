@@ -29,6 +29,7 @@ namespace s3bucketapp.Controllers
             var result = await _AWSS3FileService.FilesList();
             return Ok(result);
         }
+
         [Route("getFile/{fileName}")]
         [HttpGet]
         public async Task<IActionResult> GetFile(string fileName)
@@ -51,6 +52,7 @@ namespace s3bucketapp.Controllers
             var result = await _AWSS3FileService.UpdateFile(uploadFileName, fileName);
             return Ok(new { isSucess = result });
         }
+
         [Route("deleteFile/{fileName}")]
         [HttpDelete]
         public async Task<IActionResult> DeleteFile(string fileName)
@@ -58,5 +60,32 @@ namespace s3bucketapp.Controllers
             var result = await _AWSS3FileService.DeleteFile(fileName);
             return Ok(new { isSucess = result });
         }
+
+
+        [Route("addBucket/{bucketName}")]
+        [HttpPost]
+        public async Task<IActionResult> AddBucket(string bucketName)
+        {
+            var result = await _AWSS3FileService.AddBucket(bucketName);
+            return Ok(new { isSucess = result });
+        }
+
+        [Route("bucketsList")]
+        [HttpGet]
+        public async Task<IActionResult> BucketsListAsync()
+        {
+            var result = await _AWSS3FileService.BucketList();
+            return Ok(result);
+        }
+
+        [Route("deleteBucket/{bucketName}")]
+        [HttpDelete]
+        public async Task<IActionResult> DeleteBucket(string bucketName)
+        {
+            var result = await _AWSS3FileService.DeleteBucket(bucketName);
+            return Ok(new { isSucess = result });
+        }
+
+
     }
 }

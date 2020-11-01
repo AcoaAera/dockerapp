@@ -12,9 +12,13 @@ namespace s3bucketapp.Helpers
     {
         Task<bool> UploadFile(System.IO.Stream inputStream, string fileName);
         Task<ListVersionsResponse> FilesList();
+        Task<ListBucketsResponse> BucketList();
         Task<Stream> GetFile(string key);
         Task<bool> DeleteFile(string key);
+        Task<bool> DeleteBucket(string key);
+        Task<bool> AddBucket(string key);
     }
+
     public class AWSS3BucketHelper : IAWSS3BucketHelper
     {
         private readonly IAmazonS3 _amazonS3;
@@ -50,6 +54,12 @@ namespace s3bucketapp.Helpers
         {
             return await _amazonS3.ListVersionsAsync(_settings.AWSS3.BucketName);
         }
+
+        public async Task<ListBucketsResponse> BucketList()
+        {
+            return await _amazonS3.ListBucketsAsync();  
+        }
+
         public async Task<Stream> GetFile(string key)
         {
 
@@ -76,6 +86,40 @@ namespace s3bucketapp.Helpers
             }
 
 
+        }
+
+        public async Task<bool> DeleteBucket(string key)
+        {
+            try
+            {
+                DeleteBucketResponse response = await _amazonS3.DeleteBucketAsync(key);
+                if (response.HttpStatusCode == System.Net.HttpStatusCode.NoContent)
+                    return true;
+                else
+                    return false;
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
+
+
+        }
+
+        public async Task<bool> AddBucket(string key)
+        {
+            try
+            {
+                PutBucketResponse response = await _amazonS3.PutBucketAsync(key);
+                if (response.HttpStatusCode == System.Net.HttpStatusCode.OK)
+                    return true;
+                else
+                    return false;
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
         }
     }
 }
