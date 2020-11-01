@@ -24,9 +24,9 @@ namespace s3bucketapp.Controllers
         }
         [Route("filesList")]
         [HttpGet]
-        public async Task<IActionResult> FilesListAsync()
+        public async Task<IActionResult> FilesListAsync(string bucketName)
         {
-            var result = await _AWSS3FileService.FilesList();
+            var result = await _AWSS3FileService.FilesList(bucketName);
             return Ok(result);
         }
 
@@ -86,6 +86,12 @@ namespace s3bucketapp.Controllers
             return Ok(new { isSucess = result });
         }
 
-
+        [Route("regognizeImage")]
+        [HttpGet]
+        public async Task<IActionResult> RegognizeImageAsync(string bucketName, string fileName)
+        {
+            var result = await _AWSS3FileService.RecognizeImage(bucketName,fileName);
+            return Ok(result);
+        }
     }
 }

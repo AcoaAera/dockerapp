@@ -6,19 +6,21 @@ using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
 using s3bucketapp.Models;
+using System.Security.Cryptography.X509Certificates;
 
 namespace s3bucketapp.Services
 {
     public interface IAWSS3FileService
     {
         Task<bool> UploadFile(UploadFileName uploadFileName);
-        Task<List<string>> FilesList();
+        Task<List<string>> FilesList(string bucketName);
         Task<List<string>> BucketList();
         Task<Stream> GetFile(string key);
         Task<bool> UpdateFile(UploadFileName uploadFileName, string key);
         Task<bool> DeleteFile(string key);
         Task<bool> DeleteBucket(string key);
         Task<bool> AddBucket(string key);
+        Task<List<string>> RecognizeImage(string bucketName, string fileName);
     }
 
     public class AWSS3FileService : IAWSS3FileService
@@ -47,11 +49,11 @@ namespace s3bucketapp.Services
                 throw ex;
             }
         }
-        public async Task<List<string>> FilesList()
+        public async Task<List<string>> FilesList(string bucketName)
         {
             try
             {
-                ListVersionsResponse listVersions = await _AWSS3BucketHelper.FilesList();
+                ListVersionsResponse listVersions = await _AWSS3BucketHelper.FilesList(bucketName);
                 return listVersions.Versions.Select(c => c.Key).ToList();
             }
             catch (Exception ex)
@@ -139,6 +141,23 @@ namespace s3bucketapp.Services
             try
             {
                 return await _AWSS3BucketHelper.AddBucket(key);
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
+        }
+
+        public async Task<List<string>> RecognizeImage(string bucketName, string fileName)
+        {
+            try
+            {
+                var detectList = await _AWSS3BucketHelper.RecognizeImage(bucketName,fileName);
+                var list = new List<string>();
+                foreach (var item in detectList.Labels)
+                    list.Add(item.Name + "," + item.Confidence);
+
+                return list;
             }
             catch (Exception ex)
             {
