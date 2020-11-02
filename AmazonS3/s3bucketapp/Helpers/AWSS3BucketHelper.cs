@@ -13,11 +13,11 @@ namespace s3bucketapp.Helpers
 {
     public interface IAWSS3BucketHelper
     {
-        Task<bool> UploadFile(System.IO.Stream inputStream, string fileName);
+        Task<bool> UploadFile(System.IO.Stream inputStream, string bucketName, string fileName);
         Task<ListVersionsResponse> FilesList(string bucketName);
         Task<ListBucketsResponse> BucketList();
-        Task<Stream> GetFile(string key);
-        Task<bool> DeleteFile(string key);
+        Task<Stream> GetFile(string bucketName, string key);
+        Task<bool> DeleteFile(string bucketName, string key);
         Task<bool> DeleteBucket(string key);
         Task<bool> AddBucket(string key);
         Task<DetectLabelsResponse> RecognizeImage(string bucketName, string fileName);
@@ -36,14 +36,14 @@ namespace s3bucketapp.Helpers
             this._settings = settings.Value;
         }
 
-        public async Task<bool> UploadFile(System.IO.Stream inputStream, string fileName)
+        public async Task<bool> UploadFile(System.IO.Stream inputStream, string bucketName, string fileName)
         {
             try
             {
                 PutObjectRequest request = new PutObjectRequest()
                 {
                     InputStream = inputStream,
-                    BucketName = _settings.AWSS3.BucketName,
+                    BucketName = bucketName,
                     Key = fileName
                 };
                 PutObjectResponse response = await _amazonS3.PutObjectAsync(request);
@@ -85,21 +85,21 @@ namespace s3bucketapp.Helpers
                 });
         }
 
-        public async Task<Stream> GetFile(string key)
+        public async Task<Stream> GetFile(string bucketName, string key)
         {
 
-            GetObjectResponse response = await _amazonS3.GetObjectAsync(_settings.AWSS3.BucketName, key);
+            GetObjectResponse response = await _amazonS3.GetObjectAsync(bucketName, key);
             if (response.HttpStatusCode == System.Net.HttpStatusCode.OK)
                 return response.ResponseStream;
             else
                 return null;
         }
 
-        public async Task<bool> DeleteFile(string key)
+        public async Task<bool> DeleteFile(string bucketName, string key)
         {
             try
             {
-                DeleteObjectResponse response = await _amazonS3.DeleteObjectAsync(_settings.AWSS3.BucketName, key);
+                DeleteObjectResponse response = await _amazonS3.DeleteObjectAsync(bucketName, key);
                 if (response.HttpStatusCode == System.Net.HttpStatusCode.NoContent)
                     return true;
                 else

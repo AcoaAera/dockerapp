@@ -17,9 +17,9 @@ namespace s3bucketapp.Controllers
         }
         [Route("uploadFile")]
         [HttpPost]
-        public async Task<IActionResult> UploadFileAsync(UploadFileName uploadFileName)
+        public async Task<IActionResult> UploadFileAsync(string bucketName, UploadFileName uploadFileName)
         {
-            var result = await _AWSS3FileService.UploadFile(uploadFileName);
+            var result = await _AWSS3FileService.UploadFile(bucketName, uploadFileName);
             return Ok(new { isSucess = result });
         }
         [Route("filesList")]
@@ -32,11 +32,11 @@ namespace s3bucketapp.Controllers
 
         [Route("getFile/{fileName}")]
         [HttpGet]
-        public async Task<IActionResult> GetFile(string fileName)
+        public async Task<IActionResult> GetFile(string bucketName, string fileName)
         {
             try
             {
-                var result = await _AWSS3FileService.GetFile(fileName);
+                var result = await _AWSS3FileService.GetFile(bucketName, fileName);
                 return File(result, "image/png");
             }
             catch
@@ -47,17 +47,17 @@ namespace s3bucketapp.Controllers
         }
         [Route("updateFile")]
         [HttpPut]
-        public async Task<IActionResult> UpdateFile(UploadFileName uploadFileName, string fileName)
+        public async Task<IActionResult> UpdateFile(UploadFileName uploadFileName, string bucketName, string fileName)
         {
-            var result = await _AWSS3FileService.UpdateFile(uploadFileName, fileName);
+            var result = await _AWSS3FileService.UpdateFile(uploadFileName, bucketName, fileName);
             return Ok(new { isSucess = result });
         }
 
         [Route("deleteFile/{fileName}")]
         [HttpDelete]
-        public async Task<IActionResult> DeleteFile(string fileName)
+        public async Task<IActionResult> DeleteFile(string bucketName, string fileName)
         {
-            var result = await _AWSS3FileService.DeleteFile(fileName);
+            var result = await _AWSS3FileService.DeleteFile(bucketName, fileName);
             return Ok(new { isSucess = result });
         }
 

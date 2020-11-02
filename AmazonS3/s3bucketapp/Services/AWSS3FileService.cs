@@ -12,12 +12,12 @@ namespace s3bucketapp.Services
 {
     public interface IAWSS3FileService
     {
-        Task<bool> UploadFile(UploadFileName uploadFileName);
+        Task<bool> UploadFile(string bucketName, UploadFileName uploadFileName);
         Task<List<string>> FilesList(string bucketName);
         Task<List<string>> BucketList();
-        Task<Stream> GetFile(string key);
-        Task<bool> UpdateFile(UploadFileName uploadFileName, string key);
-        Task<bool> DeleteFile(string key);
+        Task<Stream> GetFile(string bucketName, string key);
+        Task<bool> UpdateFile(UploadFileName uploadFileName, string bucketName, string key);
+        Task<bool> DeleteFile(string bucketName, string key);
         Task<bool> DeleteBucket(string key);
         Task<bool> AddBucket(string key);
         Task<List<string>> RecognizeImage(string bucketName, string fileName);
@@ -31,7 +31,7 @@ namespace s3bucketapp.Services
         {
             this._AWSS3BucketHelper = AWSS3BucketHelper;
         }
-        public async Task<bool> UploadFile(UploadFileName uploadFileName)
+        public async Task<bool> UploadFile(string bucketName, UploadFileName uploadFileName)
         {
             try
             {
@@ -41,7 +41,7 @@ namespace s3bucketapp.Services
                     string fileExtension = Path.GetExtension(path);
                     string fileName = string.Empty;
                     fileName = $"{DateTime.Now.Ticks}{fileExtension}";
-                    return await _AWSS3BucketHelper.UploadFile(fsSource, fileName);
+                    return await _AWSS3BucketHelper.UploadFile(fsSource, bucketName, fileName);
                 }
             }
             catch (Exception ex)
@@ -77,11 +77,11 @@ namespace s3bucketapp.Services
             }
         }
 
-        public async Task<Stream> GetFile(string key)
+        public async Task<Stream> GetFile(string bucketName, string key)
         {
             try
             {
-                Stream fileStream = await _AWSS3BucketHelper.GetFile(key);
+                Stream fileStream = await _AWSS3BucketHelper.GetFile(bucketName, key);
                 if (fileStream == null)
                 {
                     Exception ex = new Exception("File Not Found");
@@ -97,14 +97,14 @@ namespace s3bucketapp.Services
                 throw ex;
             }
         }
-        public async Task<bool> UpdateFile(UploadFileName uploadFileName, string key)
+        public async Task<bool> UpdateFile(UploadFileName uploadFileName, string bucketName, string key)
         {
             try
             {
                 var path = Path.Combine("Files", uploadFileName.ToString() + ".png");
                 using (FileStream fsSource = new FileStream(path, FileMode.Open, FileAccess.Read))
                 {
-                    return await _AWSS3BucketHelper.UploadFile(fsSource, key);
+                    return await _AWSS3BucketHelper.UploadFile(fsSource, bucketName, key);
                 }
             }
             catch (Exception ex)
@@ -112,11 +112,11 @@ namespace s3bucketapp.Services
                 throw ex;
             }
         }
-        public async Task<bool> DeleteFile(string key)
+        public async Task<bool> DeleteFile(string bucketName, string key)
         {
             try
             {
-                return await _AWSS3BucketHelper.DeleteFile(key);
+                return await _AWSS3BucketHelper.DeleteFile(bucketName, key);
             }
             catch (Exception ex)
             {
