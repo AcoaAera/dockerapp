@@ -20,7 +20,7 @@ namespace s3bucketapp.Services
         Task<bool> DeleteFile(string bucketName, string key);
         Task<bool> DeleteBucket(string key);
         Task<bool> AddBucket(string key);
-        Task<List<string>> RecognizeImage(string bucketName, string fileName);
+        Task<List<string>> RecognizeImage(string fileName);
     }
 
     public class AWSS3FileService : IAWSS3FileService
@@ -148,11 +148,11 @@ namespace s3bucketapp.Services
             }
         }
 
-        public async Task<List<string>> RecognizeImage(string bucketName, string fileName)
+        public async Task<List<string>> RecognizeImage(string fileName)
         {
             try
             {
-                var detectList = await _AWSS3BucketHelper.RecognizeImage(bucketName,fileName);
+                var detectList = await _AWSS3BucketHelper.RecognizeImage(fileName);
                 var list = new List<string>();
                 foreach (var item in detectList.Labels)
                     list.Add(item.Name + "," + item.Confidence);

@@ -20,20 +20,17 @@ namespace s3bucketapp.Helpers
         Task<bool> DeleteFile(string bucketName, string key);
         Task<bool> DeleteBucket(string key);
         Task<bool> AddBucket(string key);
-        Task<DetectLabelsResponse> RecognizeImage(string bucketName, string fileName);
+        Task<DetectLabelsResponse> RecognizeImage(string fileName);
 
     }
 
     public class AWSS3BucketHelper : IAWSS3BucketHelper
     {
         private readonly IAmazonS3 _amazonS3;
-        private readonly ServiceConfiguration _settings;
-        private readonly IAmazonRekognition rekognition;
 
-        public AWSS3BucketHelper(IAmazonS3 s3Client, IOptions<ServiceConfiguration> settings)
+        public AWSS3BucketHelper(IAmazonS3 s3Client)
         {
             this._amazonS3 = s3Client;
-            this._settings = settings.Value;
         }
 
         public async Task<bool> UploadFile(System.IO.Stream inputStream, string bucketName, string fileName)
@@ -68,21 +65,32 @@ namespace s3bucketapp.Helpers
             return await _amazonS3.ListBucketsAsync();
         }
 
-        public async Task<DetectLabelsResponse> RecognizeImage(string bucketName, string fileName)
+        public async Task<DetectLabelsResponse> RecognizeImage(string fileName)
         {
-            var rekognitionClient = new AmazonRekognitionClient();
-            return await rekognitionClient.DetectLabelsAsync(
-                new DetectLabelsRequest
-                {
-                    Image = new Image
-                    {
-                        S3Object = new Amazon.Rekognition.Model.S3Object
-                        {
-                            Bucket = bucketName,
-                            Name = fileName
-                        }
-                    }
-                });
+            string photo = "D:\\Users\\User\\Desktop\\aws-image-rekognition-master\\aws-image-rekognition\\img\\" + fileName;
+            //string photo = fileName;
+            Image image = new Image();
+            using (FileStream fs = new FileStream(photo, FileMode.Open, FileAccess.Read))
+            {
+                byte[] data = null;
+                data = new byte[fs.Length];
+                fs.Read(data, 0, (int)fs.Length);
+                image.Bytes = new MemoryStream(data);
+            }
+
+
+            AmazonRekognitionClient rekognitionClient = new AmazonRekognitionClient();
+
+            DetectLabelsRequest detectlabelsRequest = new DetectLabelsRequest()
+            {
+                Image = image,
+                MaxLabels = 10,
+                MinConfidence = 77F
+            };
+
+            DetectLabelsResponse detectLabelsResponse = await rekognitionClient.DetectLabelsAsync(detectlabelsRequest);
+            return detectLabelsResponse;
+
         }
 
         public async Task<Stream> GetFile(string bucketName, string key)

@@ -23,6 +23,7 @@ namespace s3bucketapp
         // This method gets called by the runtime. Use this method to add services to the container.  
         public void ConfigureServices(IServiceCollection services)
         {
+            services.AddRazorPages();
             services.AddControllers();
             var appSettingsSection = Configuration.GetSection("ServiceConfiguration");
             services.AddAWSService<IAmazonS3>();
@@ -42,6 +43,8 @@ namespace s3bucketapp
                 .AllowAnyHeader());
                 // .AllowCredentials());  
             });
+            services.AddMvc();
+            
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.  
@@ -51,14 +54,18 @@ namespace s3bucketapp
             {
                 app.UseDeveloperExceptionPage();
             }
+            else
+            {
+                app.UseExceptionHandler("/Error");
+                app.UseHsts();
+            }
             app.UseHttpsRedirection();
             app.UseRouting();
+            app.UseStaticFiles();
             app.UseAuthorization();
             app.UseCors(MyAllowSpecificOrigins);
             // Enable middleware to serve generated Swagger as a JSON endpoint.  
-            app.UseSwagger();
-            // Enable middleware to serve swagger-ui (HTML, JS, CSS, etc.),  
-            // specifying the Swagger JSON endpoint.  
+            app.UseSwagger(); 
             app.UseSwaggerUI(c =>
             {
                 c.SwaggerEndpoint("/swagger/v1/swagger.json", "My API V1");
@@ -66,7 +73,11 @@ namespace s3bucketapp
 
             app.UseEndpoints(endpoints =>
             {
+                endpoints.MapRazorPages();
                 endpoints.MapControllers();
+                endpoints.MapControllerRoute(
+                name: "default",
+                    pattern: "{controller=Home}/{action=Index}/{id?}");
             });
         }
     }

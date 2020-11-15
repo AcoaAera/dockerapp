@@ -1,0 +1,30 @@
+﻿@page
+@model IndexModel
+@addTagHelper *, Microsoft.AspNetCore.Mvc.TagHelpers
+@{
+    ViewData["Title"] = "Home page";
+}
+
+<div class="text-center">
+    @using (Html.BeginForm("Recognize", "Home", FormMethod.Post))
+    {
+        <input type="file" name="fileName" value="" />
+        <input type="submit" value=Check file" />
+    }
+    <br />
+</div>
+@if (Model.RecognizedItems.Count != 0)
+{
+
+    <table class="table">
+        <tr><td>Название</td><td>Вероятность</td></tr>
+
+        @foreach (var item in Model.RecognizedItems)
+        {
+            <tr>
+                <td>@item.Name</td>
+                <td>@item.Confidence</td>
+            </tr>
+        }
+    </table>
+}

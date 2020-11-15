@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 namespace s3bucketapp.Controllers
 {
     [Produces("application/json")]
-    [Route("api/[controller]")]
+    [Route("api/")]
     [ApiController]
     public class AWSS3FileController : ControllerBase
     {
@@ -88,9 +88,9 @@ namespace s3bucketapp.Controllers
 
         [Route("regognizeImage")]
         [HttpGet]
-        public async Task<IActionResult> RegognizeImageAsync(string bucketName, string fileName)
+        public async Task<IActionResult> RegognizeImageAsync(string fileName)
         {
-            var result = await _AWSS3FileService.RecognizeImage(bucketName,fileName);
+            var result = await _AWSS3FileService.RecognizeImage(fileName);
             return Ok(result);
         }
     }
