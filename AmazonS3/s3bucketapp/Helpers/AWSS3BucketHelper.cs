@@ -67,10 +67,8 @@ namespace s3bucketapp.Helpers
 
         public async Task<DetectLabelsResponse> RecognizeImage(string fileName)
         {
-            string photo = "D:\\Users\\User\\Desktop\\aws-image-rekognition-master\\aws-image-rekognition\\img\\" + fileName;
-            //string photo = fileName;
             Image image = new Image();
-            using (FileStream fs = new FileStream(photo, FileMode.Open, FileAccess.Read))
+            using (FileStream fs = new FileStream(fileName, FileMode.Open, FileAccess.Read))
             {
                 byte[] data = null;
                 data = new byte[fs.Length];

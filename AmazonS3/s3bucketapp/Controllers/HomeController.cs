@@ -32,6 +32,7 @@ namespace s3bucketapp.Controllers
         public ActionResult Recognize(string fileName)
         {
             ListItems.list.Clear();
+            fileName = "D:\\Users\\User\\Desktop\\aws-image-rekognition-master\\aws-image-rekognition\\img\\" + fileName;
             var detectList = _AWSS3BucketHelper.RecognizeImage(fileName);
             foreach (var item in detectList.Result.Labels)
             {
