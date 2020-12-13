@@ -123,3 +123,53 @@ Percentage of the requests served within a certain time (ms)
   99%   3023
  100%  64121 (longest request)
 ```
+# Реализация запуска приложения в Kubernetes
+[Гайд по minikube](https://minikube.sigs.k8s.io/docs/start/)
+Для начала установлен Minikube. VM уже был установлен на машине.
+Запускаем minikube:
+```sh
+minikube start
+```
+
+Видим, что он корректно запустился:
+![Screenshot](https://github.com/sergejoz/dockerapp/blob/master/Minikube/start.png)
+
+Для деплоя был взят пример hello-minikube.
+```sh
+kubectl create deployment hello-minikube --image=k8s.gcr.io/echoserver:1.4
+kubectl expose deployment hello-minikube --type=NodePort --port=8080
+kubectl get services hello-minikube
+minikube service hello-minikube
+```
+![Screenshot](https://github.com/sergejoz/dockerapp/blob/master/Minikube/service%20hello-minikube.png)
+Успешно запущен.
+![Screenshot](https://github.com/sergejoz/dockerapp/blob/master/Minikube/browser%20answer.png)
+Попробуем перекинуть на другой порт:
+```sh
+kubectl port-forward service/hello-minikube 7080:8080
+```
+![Screenshot](https://github.com/sergejoz/dockerapp/blob/master/Minikube/mapping.png)
+## Dashboard
+Запуск dashboard:
+```sh
+minikube dashboard
+```
+![Screenshot](https://github.com/sergejoz/dockerapp/blob/master/Minikube/dashboard%20cmd.png)
+
+Вид dashboard:
+![Screenshot](https://github.com/sergejoz/dockerapp/blob/master/Minikube/dashboard%20view.png)
+
+## Управление Minikube
+Пауза: 
+```sh
+minikube pause
+```
+Остановка:
+```sh
+minikube stop
+```
+
+Удаление всех кластеров:
+```sh
+minikube delete --all
+```
