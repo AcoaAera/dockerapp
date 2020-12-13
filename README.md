@@ -125,6 +125,7 @@ Percentage of the requests served within a certain time (ms)
 ```
 # Реализация запуска приложения в Kubernetes
 [Гайд по minikube](https://minikube.sigs.k8s.io/docs/start/)
+
 Для начала установлен Minikube. VM уже был установлен на машине.
 Запускаем minikube:
 ```sh
@@ -142,6 +143,7 @@ kubectl get services hello-minikube
 minikube service hello-minikube
 ```
 ![Screenshot](https://github.com/sergejoz/dockerapp/blob/master/Minikube/service%20hello-minikube.png)
+
 Успешно запущен.
 ![Screenshot](https://github.com/sergejoz/dockerapp/blob/master/Minikube/browser%20answer.png)
 Попробуем перекинуть на другой порт:
