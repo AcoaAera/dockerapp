@@ -176,4 +176,11 @@ minikube stop
 minikube delete --all
 ```
 
-Update: добавлен yml файл ([Dockerfile](https://github.com/sergejoz/dockerapp/blob/master/Minikube/minikube.yml)).
+Update: добавлен yml файл ([minikube.yml](https://github.com/sergejoz/dockerapp/blob/master/Minikube/minikube.yml)).
+
+```sh
+kubectl apply -f minikube.yml
+
+deployment.apps/counter created
+service/counter created
+```
